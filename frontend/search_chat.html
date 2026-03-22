@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LittlefoxAI</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="gpt-app">
+        <aside class="gpt-sidebar">
+            <div class="gpt-sidebar-header">
+                <div class="brand"><i class="fas fa-fox"></i> LittlefoxAI</div>
+            </div>
+            <button class="gpt-new-chat" id="newSessionBtn"><i class="fas fa-plus"></i> New chat</button>
+            <div class="gpt-sidebar-section">
+                <div class="gpt-sidebar-title">Recent</div>
+                <div id="conversationList" class="gpt-convo-list">
+                    <div class="gpt-convo-item muted">No recent chats</div>
+                </div>
+            </div>
+            <div class="gpt-sidebar-footer">
+                <a href="/history">History</a>
+                <a href="/profile-ui">Profile</a>
+                <a href="/about">About</a>
+            </div>
+        </aside>
+
+        <main class="gpt-main" id="gptMain">
+            <header class="gpt-topbar">
+                <div class="gpt-title">LittlefoxAI</div>
+                <div class="gpt-actions">
+                    <span class="status-chip model" id="sourceBadge">Model</span>
+                </div>
+            </header>
+
+            <div class="chat-area" id="chatArea">
+                <div class="empty-state" id="emptyState">
+                    <h1>How can I help you today?</h1>
+                    <div class="suggestions">
+                        <button data-suggest="Explain something">Explain something</button>
+                        <button data-suggest="Help me code">Help me code</button>
+                        <button data-suggest="Answer questions">Answer questions</button>
+                        <button data-suggest="Generate ideas">Generate ideas</button>
+                    </div>
+                    <div id="emptyComposerSlot"></div>
+                </div>
+                <div class="messages" id="messages"></div>
+            </div>
+            <div class="message ai typing" id="typingIndicator" style="display:none;">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+
+            <section class="gpt-sources" id="sourcesPanel">
+                <div class="gpt-sources-header">
+                    <span>Sources</span>
+                    <span class="muted" id="confidenceLabel">Confidence: -</span>
+                </div>
+                <div id="results" class="results"></div>
+                <div id="citations" class="citations"></div>
+            </section>
+
+            <section class="gpt-composer" id="composer">
+                <div class="gpt-input-wrap">
+                    <div class="gpt-input-row">
+                        <button id="attachBtn" class="gpt-attach" type="button" aria-label="Attach"><i class="fas fa-paperclip"></i></button>
+                        <input type="file" id="fileInput" hidden />
+                        <textarea id="unifiedInput" rows="2" placeholder="Message LittlefoxAI..." autocomplete="off"></textarea>
+                        <button id="unifiedSendBtn" type="button" aria-label="Send"><i class="fas fa-arrow-up"></i></button>
+                    </div>
+                    <div class="gpt-attachment muted" id="attachmentHint" style="display:none;"></div>
+                    <div class="gpt-composer-row">
+                        <label class="gpt-toggle">
+                            <input type="checkbox" id="webToggle" />
+                            <span>Web</span>
+                        </label>
+                        <div class="gpt-hint muted">Enter to send. Shift+Enter for a new line.</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="previewModal" class="preview-modal" style="display:none;">
+        <div class="preview-content">
+            <button class="close-preview" onclick="closePreview()">✕</button>
+            <iframe id="previewFrame" src="about:blank" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+backend/data/app.log
+
+# Secrets
+backend/HF.env
+.env
+.env.*
+
+# Models / large artifacts
+backend/models/
+backend/saved_model/
+backend/data/search_index/
+backend/data/memory/
+backend/data/processed/
+backend/data/raw/
+data/
+*.pth
+*.pt
+*.safetensors
+*.bin
+
+# Node / frontend builds (if any)
+node_modules/
+dist/
+build/

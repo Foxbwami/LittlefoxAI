@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About LittlefoxAI</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <header class="ai-header">
+        <div class="ai-header-content">
+            <div class="ai-logo">
+                <i class="fas fa-fox"></i> About
+            </div>
+            <div class="ai-header-actions">
+                <button id="homeBtn" class="ai-button ghost-btn" title="Home">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button id="moreBtn" class="ai-button ghost-btn" title="More">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div style="max-width: 800px; margin: 40px auto; padding: 20px;">
+        <h2>About LittlefoxAI</h2>
+        <p style="color: var(--muted); margin-bottom: 20px;">A hybrid AI system combining semantic memory, distributed crawling, and advanced search.</p>
+        
+        <div style="background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+            <div>
+                <h3>🧠 Semantic Memory</h3>
+                <p style="color: var(--muted); margin: 6px 0 0 0;">Remembers previous conversations and context for personalized responses.</p>
+            </div>
+            <div>
+                <h3>🔍 Hybrid Search</h3>
+                <p style="color: var(--muted); margin: 6px 0 0 0;">Combines local knowledge base with live web search for comprehensive answers.</p>
+            </div>
+            <div>
+                <h3>📚 Multi-Mode AI</h3>
+                <p style="color: var(--muted); margin: 6px 0 0 0;">Chat, Code, Research, Creative, and Analysis modes for different use cases.</p>
+            </div>
+            <div>
+                <h3>🎓 Academic Features</h3>
+                <p style="color: var(--muted); margin: 6px 0 0 0;">Automatic citations in APA, MLA, and Chicago formats for research.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="moreMenu" class="ai-dropdown-menu" style="display: none;">
+        <a href="/" class="ai-dropdown-item">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="/chat-ui" class="ai-dropdown-item">
+            <i class="fas fa-comments"></i> Chat
+        </a>
+        <a href="/explore" class="ai-dropdown-item">
+            <i class="fas fa-search"></i> Search
+        </a>
+        <a href="/history" class="ai-dropdown-item">
+            <i class="fas fa-history"></i> History
+        </a>
+        <!-- Profile accessible via top-right avatar -->
+        <a href="/feedback" class="ai-dropdown-item">
+            <i class="fas fa-comment"></i> Feedback
+        </a>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+        document.getElementById('homeBtn').addEventListener('click', () => window.location.href = '/');
+        document.getElementById('moreBtn').addEventListener('click', function(e) {
+            const menu = document.getElementById('moreMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            e.stopPropagation();
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#moreBtn') && !e.target.closest('#moreMenu')) {
+                document.getElementById('moreMenu').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+            <p>Distributed crawling, hybrid ranking, and semantic memory--built from scratch.</p>
+        </section>
+
+        <section class="grid two">
+            <div class="card">
+                <h3>Pipeline</h3>
+                <p class="muted">Crawl -> Index -> Rank -> Retrieve -> Answer -> Learn.</p>
+            </div>
+            <div class="card">
+                <h3>Data</h3>
+                <p class="muted">Local crawl + live web sources when needed.</p>
+            </div>
+            <div class="card">
+                <h3>AI Core</h3>
+                <p class="muted">Transformer model with BPE tokenization and personalization.</p>
+            </div>
+            <div class="card">
+                <h3>Memory</h3>
+                <p class="muted">FAISS vector store with pruning and profile-aware context.</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

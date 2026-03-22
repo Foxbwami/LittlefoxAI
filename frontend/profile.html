@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LittlefoxAI Profile</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <header class="ai-header">
+        <div class="ai-header-content">
+            <div class="ai-logo">
+                <i class="fas fa-fox"></i> Profile
+            </div>
+            <div class="ai-header-actions">
+                <button id="homeBtn" class="ai-button ghost-btn" title="Home">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button id="moreBtn" class="ai-button ghost-btn" title="More">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>Customize Your AI Experience</h1>
+            <p>Personalize how LittlefoxAI communicates with you</p>
+        </div>
+
+        <form id="profile-form" class="profile-form">
+            <!-- Your Name Section -->
+            <div class="form-group">
+                <label for="user-name" class="form-label">
+                    <i class="fas fa-user"></i> Your Name
+                </label>
+                <input 
+                    type="text" 
+                    id="user-name" 
+                    class="form-input"
+                    placeholder="e.g., Steven" 
+                    maxlength="50"
+                />
+                <small class="form-hint">How we'll address you in conversations</small>
+            </div>
+
+            <!-- Preferred Tone Section -->
+            <div class="form-group">
+                <label for="personality" class="form-label">
+                    <i class="fas fa-comments"></i> Preferred Tone
+                </label>
+                <div class="tone-presets">
+                    <button type="button" class="tone-btn active" data-tone="friendly">
+                        <i class="fas fa-smile"></i> Friendly
+                    </button>
+                    <button type="button" class="tone-btn" data-tone="professional">
+                        <i class="fas fa-briefcase"></i> Professional
+                    </button>
+                    <button type="button" class="tone-btn" data-tone="analytical">
+                        <i class="fas fa-chart-line"></i> Analytical
+                    </button>
+                    <button type="button" class="tone-btn" data-tone="creative">
+                        <i class="fas fa-lightbulb"></i> Creative
+                    </button>
+                </div>
+                <textarea 
+                    id="personality" 
+                    class="form-textarea"
+                    rows="4"
+                    placeholder="e.g., Friendly, concise, witty like a mentor. Use emojis occasionally. Explain concepts in simple terms."
+                ></textarea>
+                <small class="form-hint">Describe your preferred communication style and personality traits</small>
+            </div>
+
+            <!-- Interaction Preferences Section -->
+            <div class="form-group">
+                <label for="preferences" class="form-label">
+                    <i class="fas fa-sliders-h"></i> Interaction Preferences
+                </label>
+
+                <div class="preference-options">
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="academic-focus" class="pref-checkbox" />
+                        <span class="checkbox-label">Academic Focus (citations, sources)</span>
+                    </label>
+
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="concise-responses" class="pref-checkbox" />
+                        <span class="checkbox-label">Concise Responses (brief answers)</span>
+                    </label>
+
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="detailed-explanations" class="pref-checkbox" />
+                        <span class="checkbox-label">Detailed Explanations (in-depth)</span>
+                    </label>
+
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="code-examples" class="pref-checkbox" />
+                        <span class="checkbox-label">Include Code Examples (when relevant)</span>
+                    </label>
+                </div>
+
+                <div class="form-group-nested">
+                    <label for="citation-style" class="form-label-small">Citation Style</label>
+                    <select id="citation-style" class="form-select">
+                        <option value="none">No citations needed</option>
+                        <option value="apa">APA</option>
+                        <option value="mla">MLA</option>
+                        <option value="chicago">Chicago</option>
+                        <option value="harvard">Harvard</option>
+                    </select>
+                </div>
+
+                <textarea 
+                    id="preferences" 
+                    class="form-textarea"
+                    rows="3"
+                    placeholder="Any additional preferences or instructions for the AI..."
+                ></textarea>
+                <small class="form-hint">Share any specific requirements or preferences</small>
+            </div>
+
+            <!-- Additional Settings Section -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-cog"></i> Additional Settings
+                </label>
+
+                <label class="checkbox-group">
+                    <input type="checkbox" id="save-history" class="pref-checkbox" checked />
+                    <span class="checkbox-label">Save conversation history</span>
+                </label>
+
+                <label class="checkbox-group">
+                    <input type="checkbox" id="dark-mode" class="pref-checkbox" checked />
+                    <span class="checkbox-label">Dark mode</span>
+                </label>
+
+                <label class="checkbox-group">
+                    <input type="checkbox" id="notifications" class="pref-checkbox" />
+                    <span class="checkbox-label">Enable desktop notifications</span>
+                </label>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="submit" class="save-btn">
+                    <i class="fas fa-check"></i> Save Preferences
+                </button>
+                <button type="reset" class="reset-btn">
+                    <i class="fas fa-redo"></i> Reset to Defaults
+                </button>
+            </div>
+
+            <!-- Confirmation Message -->
+            <div id="confirmation-message" class="confirmation-message" style="display: none;">
+                <i class="fas fa-check-circle"></i> Preferences saved successfully!
+            </div>
+
+            <div id="error-message" class="error-message" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i> <span id="error-text">Error saving preferences</span>
+            </div>
+        </form>
+    </div>
+
+    <div id="moreMenu" class="ai-dropdown-menu" style="display: none;">
+        <a href="/" class="ai-dropdown-item">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="/chat-ui" class="ai-dropdown-item">
+            <i class="fas fa-comments"></i> Chat
+        </a>
+        <a href="/explore" class="ai-dropdown-item">
+            <i class="fas fa-search"></i> Search
+        </a>
+        <a href="/history" class="ai-dropdown-item">
+            <i class="fas fa-history"></i> History
+        </a>
+        <a href="/about" class="ai-dropdown-item">
+            <i class="fas fa-info-circle"></i> About
+        </a>
+        <a href="/feedback" class="ai-dropdown-item">
+            <i class="fas fa-comment"></i> Feedback
+        </a>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+        // Initialize profile data from localStorage
+        function loadProfile() {
+            const profile = JSON.parse(localStorage.getItem('littlefoxProfile') || '{}');
+            
+            if (profile.name) document.getElementById('user-name').value = profile.name;
+            if (profile.personality) document.getElementById('personality').value = profile.personality;
+            if (profile.preferences) document.getElementById('preferences').value = profile.preferences;
+            if (profile.tone) {
+                document.querySelectorAll('.tone-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.tone === profile.tone) btn.classList.add('active');
+                });
+            }
+            if (profile.academicFocus) document.getElementById('academic-focus').checked = true;
+            if (profile.conciseResponses) document.getElementById('concise-responses').checked = true;
+            if (profile.detailedExplanations) document.getElementById('detailed-explanations').checked = true;
+            if (profile.codeExamples) document.getElementById('code-examples').checked = true;
+            if (profile.citationStyle) document.getElementById('citation-style').value = profile.citationStyle;
+            if (profile.saveHistory !== undefined) document.getElementById('save-history').checked = profile.saveHistory;
+            if (profile.darkMode !== undefined) document.getElementById('dark-mode').checked = profile.darkMode;
+            if (profile.notifications !== undefined) document.getElementById('notifications').checked = profile.notifications;
+        }
+
+        // Tone button selection
+        document.querySelectorAll('.tone-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('personality').focus();
+            });
+        });
+
+        // Form submission
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const profile = {
+                name: document.getElementById('user-name').value,
+                personality: document.getElementById('personality').value,
+                preferences: document.getElementById('preferences').value,
+                tone: document.querySelector('.tone-btn.active').dataset.tone,
+                academicFocus: document.getElementById('academic-focus').checked,
+                conciseResponses: document.getElementById('concise-responses').checked,
+                detailedExplanations: document.getElementById('detailed-explanations').checked,
+                codeExamples: document.getElementById('code-examples').checked,
+                citationStyle: document.getElementById('citation-style').value,
+                saveHistory: document.getElementById('save-history').checked,
+                darkMode: document.getElementById('dark-mode').checked,
+                notifications: document.getElementById('notifications').checked,
+                updatedAt: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            localStorage.setItem('littlefoxProfile', JSON.stringify(profile));
+
+            // Optional: POST to backend
+            try {
+                await fetch('/profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(profile)
+                });
+            } catch (error) {
+                console.warn('Backend sync optional:', error);
+            }
+
+            // Show confirmation
+            const confirmMsg = document.getElementById('confirmation-message');
+            confirmMsg.style.display = 'flex';
+            setTimeout(() => {
+                confirmMsg.style.display = 'none';
+            }, 3000);
+        });
+
+        // Form reset
+        document.getElementById('profile-form').addEventListener('reset', () => {
+            localStorage.removeItem('littlefoxProfile');
+            loadProfile();
+        });
+
+        // Header navigation
+        document.getElementById('homeBtn').addEventListener('click', () => window.location.href = '/');
+        document.getElementById('moreBtn').addEventListener('click', function(e) {
+            const menu = document.getElementById('moreMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            e.stopPropagation();
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#moreBtn') && !e.target.closest('#moreMenu')) {
+                document.getElementById('moreMenu').style.display = 'none';
+            }
+        });
+
+        // Load profile on page load
+        window.addEventListener('load', loadProfile);
+    </script>
+</body>
+</html>

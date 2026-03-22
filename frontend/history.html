@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LittlefoxAI History</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <header class="ai-header">
+        <div class="ai-header-content">
+            <div class="ai-logo">
+                <i class="fas fa-fox"></i> History
+            </div>
+            <div class="ai-header-actions">
+                <button id="homeBtn" class="ai-button ghost-btn" title="Home">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button id="moreBtn" class="ai-button ghost-btn" title="More">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div style="max-width: 800px; margin: 40px auto; padding: 20px;">
+        <h2 style="margin-bottom: 20px;">Conversation History</h2>
+        <p style="color: var(--muted); margin-bottom: 20px;">Your recent conversations stored locally in your browser.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <ul id="historyList" style="list-style: none; padding: 0; margin: 0;"></ul>
+        </div>
+    </div>
+
+    <div id="moreMenu" class="ai-dropdown-menu" style="display: none;">
+        <a href="/" class="ai-dropdown-item">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="/chat-ui" class="ai-dropdown-item">
+            <i class="fas fa-comments"></i> Chat
+        </a>
+        <a href="/explore" class="ai-dropdown-item">
+            <i class="fas fa-search"></i> Search
+        </a>
+        <!-- Profile accessible via top-right avatar -->
+        <a href="/about" class="ai-dropdown-item">
+            <i class="fas fa-info-circle"></i> About
+        </a>
+        <a href="/feedback" class="ai-dropdown-item">
+            <i class="fas fa-comment"></i> Feedback
+        </a>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+        document.getElementById('homeBtn').addEventListener('click', () => window.location.href = '/');
+        document.getElementById('moreBtn').addEventListener('click', function(e) {
+            const menu = document.getElementById('moreMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            e.stopPropagation();
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#moreBtn') && !e.target.closest('#moreMenu')) {
+                document.getElementById('moreMenu').style.display = 'none';
+            }
+        });
+
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+            const list = document.getElementById('historyList');
+            list.innerHTML = '';
+            
+            if (history.length === 0) {
+                list.innerHTML = '<li style="color: var(--muted); padding: 20px; text-align: center;">No conversations yet</li>';
+                return;
+            }
+            
+            history.forEach(item => {
+                const li = document.createElement('li');
+                li.style.cssText = 'background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s ease;';
+                li.onmouseover = function() { this.style.background = 'var(--panel-2)'; };
+                li.onmouseout = function() { this.style.background = 'var(--panel)'; };
+                li.innerHTML = `<div style="font-size: 13px; color: var(--muted);">${new Date(item.timestamp).toLocaleDateString()}</div><div style="margin-top: 4px;">${item.query.substring(0, 60)}...</div>`;
+                list.appendChild(li);
+            });
+        }
+        
+        renderHistory();
+    </script>
+</body>
+</html>

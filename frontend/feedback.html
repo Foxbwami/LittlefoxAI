@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback - LittlefoxAI</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <header class="ai-header">
+        <div class="ai-header-content">
+            <div class="ai-logo">
+                <i class="fas fa-fox"></i> Feedback
+            </div>
+            <div class="ai-header-actions">
+                <button id="homeBtn" class="ai-button ghost-btn" title="Home">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button id="moreBtn" class="ai-button ghost-btn" title="More">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div style="max-width: 600px; margin: 40px auto; padding: 20px;">
+        <h2 style="margin-bottom: 20px;">Send Feedback</h2>
+        <p style="color: var(--muted); margin-bottom: 20px;">Help us improve by sharing your thoughts, suggestions, or reporting issues.</p>
+        
+        <form id="feedbackForm" style="background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+            <div>
+                <label style="display: block; margin-bottom: 6px; font-size: 13px; color: var(--muted);">Rating</label>
+                <select id="rating" style="width: 100%; padding: 8px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; color: var(--ink);">
+                    <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                    <option value="4">⭐⭐⭐⭐ Good</option>
+                    <option value="3">⭐⭐⭐ Okay</option>
+                    <option value="2">⭐⭐ Poor</option>
+                    <option value="1">⭐ Very Poor</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: 6px; font-size: 13px; color: var(--muted);">Your Feedback</label>
+                <textarea id="feedbackText" rows="4" placeholder="Tell us what you think..." style="width: 100%; padding: 8px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; color: var(--ink); font-family: inherit; resize: vertical;"></textarea>
+            </div>
+            
+            <button type="submit" style="background: var(--accent); color: #000; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='var(--accent-2)'" onmouseout="this.style.background='var(--accent)'">Submit Feedback</button>
+            <div id="feedbackStatus" style="font-size: 12px; color: var(--accent); text-align: center;"></div>
+        </form>
+    </div>
+
+    <div id="moreMenu" class="ai-dropdown-menu" style="display: none;">
+        <a href="/" class="ai-dropdown-item">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="/chat-ui" class="ai-dropdown-item">
+            <i class="fas fa-comments"></i> Chat
+        </a>
+        <a href="/explore" class="ai-dropdown-item">
+            <i class="fas fa-search"></i> Search
+        </a>
+        <a href="/history" class="ai-dropdown-item">
+            <i class="fas fa-history"></i> History
+        </a>
+        <!-- Profile accessible via top-right avatar -->
+        <a href="/about" class="ai-dropdown-item">
+            <i class="fas fa-info-circle"></i> About
+        </a>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+        document.getElementById('homeBtn').addEventListener('click', () => window.location.href = '/');
+        document.getElementById('moreBtn').addEventListener('click', function(e) {
+            const menu = document.getElementById('moreMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            e.stopPropagation();
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#moreBtn') && !e.target.closest('#moreMenu')) {
+                document.getElementById('moreMenu').style.display = 'none';
+            }
+        });
+
+        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const rating = document.getElementById('rating').value;
+            const text = document.getElementById('feedbackText').value.trim();
+            
+            if (!text) return;
+            
+            try {
+                await fetch('/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ response: text, rating: rating })
+                });
+                
+                document.getElementById('feedbackText').value = '';
+                document.getElementById('feedbackStatus').textContent = '✓ Thank you for your feedback!';
+                setTimeout(() => {
+                    document.getElementById('feedbackStatus').textContent = '';
+                }, 3000);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('feedbackStatus').textContent = 'Error submitting feedback';
+            }
+        });
+    </script>
+</body>
+</html>
+            <p>Help us improve the system by rating responses.</p>
+        </section>
+
+        <section class="card">
+            <form id="feedbackForm" class="grid">
+                <label>Rating</label>
+                <input id="rating" placeholder="1 to 5" />
+                <label>Feedback</label>
+                <textarea id="feedbackText" rows="4" placeholder="What was good? What could be better?"></textarea>
+                <button type="submit">Submit</button>
+                <div id="feedbackStatus" class="muted"></div>
+            </form>
+        </section>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

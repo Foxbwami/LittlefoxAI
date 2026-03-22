@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LittlefoxAI Chat</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <!-- Unified Header -->
+    <header class="ai-header">
+        <div class="ai-header-content">
+            <div class="ai-logo">
+                <i class="fas fa-fox"></i> Chat
+            </div>
+            <div class="ai-header-actions">
+                <button id="newChatBtn" class="ai-button ghost-btn" title="New chat (Ctrl+N)">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button id="homeBtn" class="ai-button ghost-btn" title="Home">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button id="moreBtn" class="ai-button ghost-btn" title="More">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Chat Area -->
+    <main class="ai-main-container">
+        <div class="ai-chat-area">
+            <div id="chat" class="ai-messages"></div>
+        </div>
+
+        <div class="ai-input-section">
+            <!-- Input Box -->
+            <div class="ai-input-box">
+                <textarea 
+                    id="msg" 
+                    class="ai-textarea" 
+                    placeholder="Type your message..." 
+                    rows="1"
+                    autocomplete="off"></textarea>
+                <div class="ai-input-actions">
+                    <button id="sendBtn" class="ai-send-btn" title="Send (Ctrl+Enter)">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ai-input-footer">
+                <span>Chat Mode</span>
+                <span class="ai-footer-hint"><kbd>Ctrl+Enter</kbd> to send</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- More Menu -->
+    <div id="moreMenu" class="ai-dropdown-menu" style="display: none;">
+        <a href="/" class="ai-dropdown-item">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="/explore" class="ai-dropdown-item">
+            <i class="fas fa-search"></i> Search
+        </a>
+        <!-- Profile accessible via top-right avatar -->
+        <a href="/history" class="ai-dropdown-item">
+            <i class="fas fa-history"></i> History
+        </a>
+        <a href="/about" class="ai-dropdown-item">
+            <i class="fas fa-info-circle"></i> About
+        </a>
+        <a href="/feedback" class="ai-dropdown-item">
+            <i class="fas fa-comment"></i> Feedback
+        </a>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+        const msgInput = document.getElementById('msg');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatArea = document.getElementById('chat');
+        
+        // Auto-resize textarea
+        msgInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        async function sendChatMessage() {
+            const message = msgInput.value.trim();
+            if (!message) return;
+
+            // Display user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'ai-message-wrapper user';
+            userMsg.innerHTML = `<div class="ai-message-content"><strong>You:</strong> ${message}</div>`;
+            chatArea.appendChild(userMsg);
+
+            msgInput.value = '';
+            msgInput.style.height = 'auto';
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        user_id: getUserId(),
+                        tone: 'default'
+                    })
+                });
+
+                const data = await response.json();
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'ai-message-wrapper ai';
+                aiMsg.innerHTML = `<div class="ai-message-content"><strong>AI:</strong> ${data.reply || 'No response'}</div>`;
+                chatArea.appendChild(aiMsg);
+                chatArea.scrollTop = chatArea.scrollHeight;
+
+                addHistory(message);
+            } catch (error) {
+                console.error('Error:', error);
+                const errMsg = document.createElement('div');
+                errMsg.className = 'ai-message-wrapper ai';
+                errMsg.innerHTML = `<div class="ai-message-content"><strong>Error:</strong> Unable to send message</div>`;
+                chatArea.appendChild(errMsg);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendChatMessage);
+        msgInput.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        });
+
+        document.getElementById('newChatBtn').addEventListener('click', function() {
+            if (confirm('Start a new chat?')) {
+                chatArea.innerHTML = '';
+                msgInput.focus();
+            }
+        });
+
+        document.getElementById('homeBtn').addEventListener('click', function() {
+            window.location.href = '/';
+        });
+
+        document.getElementById('moreBtn').addEventListener('click', function(e) {
+            const menu = document.getElementById('moreMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#moreBtn') && !e.target.closest('#moreMenu')) {
+                document.getElementById('moreMenu').style.display = 'none';
+            }
+        });
+
+        window.addEventListener('load', () => msgInput.focus());
+
+        // Handle URL query parameters for pre-filled message
+        const params = new URLSearchParams(window.location.search);
+        const prefilledMessage = params.get('q');
+        if (prefilledMessage) {
+            msgInput.value = prefilledMessage;
+            msgInput.style.height = 'auto';
+            msgInput.style.height = Math.min(msgInput.scrollHeight, 120) + 'px';
+        }
+    </script>
+</body>
+</html>
+        });
+
+        // Help
+        document.getElementById('helpBtn').addEventListener('click', showHelpModal);
+
+        // Handle URL query parameters for pre-filled message
+        const params = new URLSearchParams(window.location.search);
+        const prefilledMessage = params.get('q');
+        if (prefilledMessage) {
+            document.getElementById('msg').value = prefilledMessage;
+            autoResize(document.getElementById('msg'));
+        }
+
+        // Load recent chats
+        function loadRecentChats() {
+            const chats = JSON.parse(localStorage.getItem('recent_chats') || '[]');
+            const recentList = document.getElementById('recentChats');
+            if (chats.length === 0) {
+                recentList.innerHTML = '<div class="empty-state">No recent chats</div>';
+                return;
+            }
+            recentList.innerHTML = chats.slice(0, 8).map(chat => `
+                <div class="recent-item" onclick="restoreChat('${chat.id}')">
+                    <div class="recent-title">${chat.title || 'Untitled'}</div>
+                    <div class="recent-time">${new Date(chat.timestamp).toLocaleDateString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function restoreChat(id) {
+            localStorage.setItem('current_chat', id);
+            location.reload();
+        }
+
+        loadRecentChats();
+    </script>
+</body>
+</html>
