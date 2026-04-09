@@ -72,6 +72,14 @@ def main():
     parser.add_argument("--model-name", default=config.HF_GENERATION_MODEL)
     parser.add_argument("--data-path", default=config.PROCESSED_DATA_PATH)
     parser.add_argument("--output-dir", default=os.path.join(config.BASE_DIR, "models", "hf_finetuned"))
+    parser.add_argument("--push-to-hub", action="store_true", help="Push model artifacts to the Hugging Face Hub.")
+    parser.add_argument(
+        "--hub-repo",
+        default=os.environ.get("HF_MODEL_REPO") or os.environ.get("HF_HUB_REPO"),
+        help="Hub repo id like 'username/model'. Defaults to HF_MODEL_REPO or HF_HUB_REPO env var.",
+    )
+    parser.add_argument("--hub-private", action="store_true", help="Create/update the Hub repo as private.")
+    parser.add_argument("--hub-strategy", default="every_save", help="Hub push strategy for Trainer.")
     parser.add_argument("--max-steps", type=int, default=200)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--grad-accum", type=int, default=1)
@@ -101,6 +109,9 @@ def main():
 
     data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
+    if args.push_to_hub and not args.hub_repo:
+        raise ValueError("--push-to-hub requires --hub-repo or HF_MODEL_REPO/HF_HUB_REPO env var.")
+
     training_args = TrainingArguments(
         output_dir=args.output_dir,
         per_device_train_batch_size=args.batch_size,
@@ -113,6 +124,11 @@ def main():
         report_to=[],
         gradient_checkpointing=True,
         fp16=torch.cuda.is_available(),
+        push_to_hub=bool(args.push_to_hub),
+        hub_model_id=args.hub_repo if args.push_to_hub else None,
+        hub_token=token if args.push_to_hub else None,
+        hub_strategy=args.hub_strategy if args.push_to_hub else None,
+        hub_private_repo=args.hub_private if args.push_to_hub else None,
     )
 
     trainer = Trainer(
@@ -125,6 +141,8 @@ def main():
     trainer.train()
     trainer.save_model(args.output_dir)
     tokenizer.save_pretrained(args.output_dir)
+    if args.push_to_hub:
+        trainer.push_to_hub(commit_message="Training run complete")
     print(f"Saved fine-tuned model to: {args.output_dir}")
 
 

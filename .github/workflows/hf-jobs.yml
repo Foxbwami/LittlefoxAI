@@ -1,0 +1,35 @@
+name: Train on Hugging Face Jobs
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  hf-train:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install HF CLI
+        run: python -m pip install -U "huggingface_hub"
+
+      - name: Authenticate to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: hf auth login --token "$HF_TOKEN"
+
+      - name: Launch training job on HF
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_MODEL_REPO: ${{ secrets.HF_MODEL_REPO }}
+          HF_BASE_MODEL: ${{ vars.HF_BASE_MODEL }}
+          HF_JOB_FLAVOR: ${{ vars.HF_JOB_FLAVOR }}
+          HF_JOB_TIMEOUT: ${{ vars.HF_JOB_TIMEOUT }}
+          HF_JOB_IMAGE: ${{ vars.HF_JOB_IMAGE }}
+        run: |
+          bash scripts/run_hf_job.sh
